@@ -41,6 +41,14 @@ hr {
 	border-style: solid;
 }
 
+ul {
+	padding:0;
+}
+
+li {
+	list-style-type: none;
+}
+
 /* ------------- HEADER ------------- */
 header {
 	background-color: #EC9454;
@@ -143,10 +151,11 @@ nav .menu li:hover {
 
 aside {
 	width:30%;
+	height:86vh;
 	float:left;
 }
 aside fieldset {
-	height:86vh;
+	height:100%;
 	margin-left:20px;
 }
 
@@ -154,13 +163,21 @@ aside fieldset {
 
 section {
 	width:70%;
+	height:86vh;
 	float:left;
 }
 
-section fieldset {
-	height:86vh;
+section fieldset#section-chat {
+	height:calc(100% - 136px);
 	margin:0 20px;
 	overflow: hidden;
+}
+
+section fieldset#section-clavardeur
+{
+	min-height:100px;
+	margin:10px 20px 0 20px;
+	overflow: hidden;	
 }
 
 

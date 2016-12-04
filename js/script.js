@@ -1,7 +1,13 @@
 $(document).ready( function() {
 	var formMessage = $("#form-message");
 	var espaceRegister = $('#espace-register');
+	var listSalons = $('#list-salons');
+	var sectionChatLdg = $("#section-chat legend");
+	var sectionChat = $("#section-chat");
+	var chatContent = $('#main-content');
 
+	// Chargement des salons
+	recupSalons();
 
 	////// REGISTER //////
 	espaceRegister.on('click', function() { // one permet d'activer le bouton une seule fois. 
@@ -138,13 +144,56 @@ $(document).ready( function() {
 			if(data == 'true')
 			{
 				recupChat();
-				var loop = setInterval(recupChat, 10000);
+				var loopChat = setInterval(recupChat, 10000);
+				var loopSalons = setInterval(recupSalons, 20000);
 			}
 		},
 		error : function(jqXHR, textStatus, errorThrow){
 			// fonction exécutée à l'échec de la requête
 			console.log(jqXHR, textStatus, errorThrow);
 		}				
+	});
+
+	////// SALONS //////
+	listSalons.on('click', 'a', function(e) {
+		e.preventDefault();
+		var that = $(this);
+
+		
+		// Changement de salon
+		$.ajax({
+			url : "libs/salons.php",
+			method : 'POST',	
+			dataType : "text",		
+			data : { "salon" : that.attr("href"),
+					"nom" : that.text()},
+			success : function(data) {
+				// fonction exécutée au succès de la requête
+				//console.log(JSON.parse(data));
+
+				var parsedData = JSON.parse(data);
+
+				// Ajout des attributs pour cibler chaque salon
+				sectionChat.attr('data-salon', parsedData.num);
+				sectionChatLdg.text(parsedData.nom);
+				$("#form-message [type=hidden]").val(parsedData.num);
+
+				// Suppression des anciens messages du chat + affichage des nouveaux
+				chatContent.html("");
+				setTimeout(recupChat,200);
+			},
+			error : function(jqXHR, textStatus, errorThrow){
+				// fonction exécutée à l'échec de la requête
+				console.log(jqXHR, textStatus, errorThrow);
+			},
+			complete : function (data) {
+				// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
+					//console.log(data);
+			}						
+		});
+
+		// On récupère les messages du salon
+						
 	});
 
 	////// CHAT //////
@@ -165,7 +214,7 @@ $(document).ready( function() {
 			},
 			success : function(data) {
 				// fonction exécutée au succès de la requête
-					//console.log(data);
+					console.log(data);
 
 				// Suppression du message du textarea après envoi	
 				$("#form-message textarea").val("");
@@ -181,6 +230,8 @@ $(document).ready( function() {
 		});		
 	});
 
+
+
 });
 
 
@@ -195,14 +246,15 @@ function recupChat() {
 		url : 'libs/ajax.php',
 		method : 'POST',		
 		data : {"action" : "update",
-				"datemess" : datederniermessage},	// Paramètre de contrôle pour le service ajax.php
+				"datemess" : datederniermessage,
+				"numsalon" : $("#section-chat").attr("data-salon")},	// Paramètre de contrôle pour le service ajax.php
 		complete : function (data) {
 			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
 				//console.log(data);
 		},
 		success : function(data) {
 			// fonction exécutée au succès de la requête
-				console.log(JSON.parse(data));
+				//console.log(JSON.parse(data));
 
 			// Récupération des data en JSON converti en objet javascript	
 			var parsedData = JSON.parse(data);
@@ -237,6 +289,41 @@ function recupChat() {
 			console.log(jqXHR, textStatus, errorThrow);
 		}				
 	});
+}
+
+////// DISPLAY SALONS //////
+function recupSalons() {
+	var listSalons = $('#list-salons ul');
+
+	$.ajax({
+		url : 'libs/salons.php',
+		method : 'POST',
+		dataType : 'text',		
+		data : {"action" : "listSalons"},
+		success : function(data) {
+			// fonction exécutée au succès de la requête
+			//console.log(JSON.parse(data));
+
+			// Récupération des data en JSON converti en objet javascript	
+			var parsedData = JSON.parse(data);
+			var content ="";
+
+			for (var i = 0; i < parsedData.length; i++) 
+			{
+				content += "<li><a href='"+parsedData[i].nom.toLowerCase()+parsedData[i].id_salon+"'>"+parsedData[i].nom+"</a></li>";
+			}
+
+			listSalons.html(content);
+		},
+		error : function(jqXHR, textStatus, errorThrow){
+			// fonction exécutée à l'échec de la requête
+			console.log(jqXHR, textStatus, errorThrow);
+		},
+		complete : function (data) {
+			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
+				//console.log(data);
+		},									
+	});	
 }
 
 // PASSWORD CHECKER

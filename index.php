@@ -4,6 +4,7 @@ require_once("inc/init.inc.php");
 /////// TODO ///////
 // Déconnecter l'utilisateur après un laps de temps + header location
 
+// Au F5 il faudrait garder l'id du salon en cours. Voir l'histo fait en exemple avec les pages AJAX
 
 ?>
 
@@ -34,23 +35,31 @@ require_once("inc/init.inc.php");
 		</nav>
 		<div class="clear"></div>
 		<aside>
-			<fieldset>
+			<fieldset id="aside-list-chat">
 				<legend>Connexion au chat</legend>
-				<?= $msg ?>
+				<div id="list-salons">
+					<h4>Liste des salons</h4>
+					<ul>
+					</ul>
+				</div>
 			</fieldset>
 		</aside>
 		<section>
-			<fieldset>
-				<legend>Chat en AJAX</legend>				
+			<fieldset id="section-chat" data-salon="2">
+				<legend>General</legend>				
 				<?php // echo "<pre>"; var_dump($_SESSION['utilisateur']); echo "</pre>"; // L'erreur php bloque l'execution des scripts en footer ?>
-				<form method="post" action="libs/ajax.php" id="form-message">
-					<textarea name="message" placeholder="Clavarder..."></textarea>
-					<input type="submit" name="envoyermess" value="Envoyer" class="btn-perso" id="btn-chat">
-				</form>
-				<div class="clear"></div>
 				<div id="main-content">
 
 				</div>		
+			</fieldset>
+			<fieldset id="section-clavardeur">
+				<legend>Clavardeur</legend>
+				<form method="post" action="libs/ajax.php" id="form-message">
+					<textarea name="message" placeholder="Clavarder..." rows="4"></textarea>
+					<input type="hidden" name="numsalon" value="2" readonly="readonly">
+					<input type="submit" name="envoyermess" value="Envoyer" class="btn-perso" id="btn-chat">
+				</form>
+				<div class="clear"></div>				
 			</fieldset>			
 		</section>
 		<div class="clear"></div>
