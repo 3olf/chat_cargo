@@ -47,7 +47,7 @@ require_once("inc/init.inc.php");
 		<section>
 			<fieldset id="section-chat" data-salon="2">
 				<legend>General</legend>				
-				<?php // echo "<pre>"; var_dump($_SESSION['utilisateur']); echo "</pre>"; // L'erreur php bloque l'execution des scripts en footer ?>
+				<?php //echo "<pre>"; var_dump($_SESSION['user']); echo "</pre>"; // L'erreur php bloque l'execution des scripts en footer ?>
 				<div id="main-content">
 
 				</div>		

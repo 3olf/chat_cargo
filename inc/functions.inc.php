@@ -14,7 +14,7 @@ function randomColor() {
 // USER AUTH
 function userConnected() 
 {
-	if (isset($_SESSION['utilisateur']))
+	if (isset($_SESSION['user']))
 	{
 		return true;
 	}

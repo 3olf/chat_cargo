@@ -94,7 +94,7 @@ $(document).ready( function() {
 							"mdp" : inputMdp.val()},	
 					success : function(data) {
 						// fonction exécutée au succès de la requête
-							console.log(data);
+							//console.log(data);
 
 						// Pseudonyme déjà utilisé 
 						if(data == 'false')
@@ -136,7 +136,7 @@ $(document).ready( function() {
 		data : {"action" : "starter"},	// Paramètre de contrôle pour le service ajax.php
 		complete : function (data) {
 			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
-				console.log(data);
+				//console.log(data);
 		},
 		success : function(data) {
 			// fonction exécutée au succès de la requête
@@ -169,7 +169,7 @@ $(document).ready( function() {
 					"nom" : that.text()},
 			success : function(data) {
 				// fonction exécutée au succès de la requête
-				//console.log(JSON.parse(data));
+				console.log(JSON.parse(data));
 
 				var parsedData = JSON.parse(data);
 
@@ -214,7 +214,7 @@ $(document).ready( function() {
 			},
 			success : function(data) {
 				// fonction exécutée au succès de la requête
-					console.log(data);
+					//console.log(data);
 
 				// Suppression du message du textarea après envoi	
 				$("#form-message textarea").val("");

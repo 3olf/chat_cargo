@@ -11,7 +11,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "listSalons")
 	echo json_encode($salons);
 	exit();
 }
-
+// Changement de salon
 if (isset($_POST["salon"]) && isset($_POST["nom"])) 
 {
 	$numsalon = substr($_POST["salon"], -1);

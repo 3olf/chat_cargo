@@ -6,7 +6,7 @@ if (isset($_GET['action']) && userConnected() && $_GET['action'] == 'deconnexion
 {
 
 		// Mise à jour de l'activité utilisateur
-    $pdo->exec("UPDATE users SET last_seen= NULL WHERE id_user = ".$_SESSION['utilisateur']['id_user']);
+    $pdo->exec("UPDATE users SET last_seen= NOW(), statut='deconnecte' WHERE id_user = ".$_SESSION['user']['id_user']);
 
 		// Detruit la session, s'execute à la fin du script
 		session_destroy();	
@@ -25,28 +25,28 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp']) && isset($_POST['connexion']
   $mdp = htmlentities($mdp, ENT_QUOTES);
 
    /* CONTROLS */
-  $req = $pdo->query("SELECT id_user, pseudo, last_seen FROM users WHERE pseudo='$pseudo' AND mdp=PASSWORD('$mdp')");
+  $req = $pdo->query("SELECT id_user, pseudo FROM users WHERE pseudo='$pseudo' AND mdp=PASSWORD('$mdp')");
 
       // Vérification sur l'existence du pseudo demandé
   if ($req->rowCount() === 1) 
   {
 
   	// Si l'utilisateur existe, on créer un tableau array 'utilisateur' dans la $_SESSION
-  	$_SESSION['utilisateur'] = array();
+  	$_SESSION['user'] = array();
 
   	$user_session = $req->fetch(PDO::FETCH_ASSOC);
 
-  	// On stock les éléments récupérés de la base de donnée dans $_SESSION['utilisateur']
+  	// On stock les éléments récupérés de la base de donnée dans $_SESSION['user']
   	foreach ($user_session as $key => $value) 
   	{
-  		  $_SESSION['utilisateur'][$key] = $value;
+  		  $_SESSION['user'][$key] = $value;
   	}
 
     // Mise à jour de l'activité utilisateur
-    $pdo->exec("UPDATE users SET last_seen=NOW() WHERE id_user = ".$_SESSION['utilisateur']['id_user']);
+    $pdo->exec("UPDATE users SET last_seen=NOW(), statut ='en ligne' WHERE id_user = ".$_SESSION['user']['id_user']);
 
   	// Auquel on ajoute user_color (sert à mettre le pseudo de l'utilisateur en couleur)
-  	$_SESSION['utilisateur']['user_color'] = randomColor();
+  	$_SESSION['user']['user_color'] = randomColor();
 
     // Redirection 
     header('location:../index.php');

@@ -4,10 +4,10 @@ require_once("../inc/init.inc.php");
 
 
 ////////// Module d'enregistrement des messages en AJAX //////////
-if (isset($_POST["message"]) && isset($_SESSION['utilisateur']) && isset($_POST["numsalon"])) 
+if (isset($_POST["message"]) && isset($_SESSION['user']) && isset($_POST["numsalon"])) 
 {
 	// Mise à jour de l'activité utilisateur
-	$pdo->exec("UPDATE users SET last_seen=NOW() WHERE id_user = ".$_SESSION['utilisateur']['id_user']);
+	$pdo->exec("UPDATE users SET last_seen=NOW(), statut='en ligne' WHERE id_user = ".$_SESSION['user']['id_user']);
 
 	// Conversion en htlmlentities pour éviter les caractères dégueulasses
 	$_POST["message"] = htmlentities($_POST["message"], ENT_QUOTES);
@@ -15,7 +15,7 @@ if (isset($_POST["message"]) && isset($_SESSION['utilisateur']) && isset($_POST[
 	if(preg_match("#^[0-9]+$#", $_POST['numsalon']))
 	{
 		// Requête d'enregistrement en base de donnée
-		$register = $pdo->exec("INSERT INTO messages (id_user, id_salon, date_message, message) VALUES (".$_SESSION['utilisateur']['id_user'].", ".$_POST["numsalon"].",  NOW(), '$_POST[message]')");
+		$register = $pdo->exec("INSERT INTO messages (id_user, id_salon, date_message, message) VALUES (".$_SESSION['user']['id_user'].", ".$_POST["numsalon"].",  NOW(), '$_POST[message]')");
 	}
 
 	exit();
@@ -23,7 +23,7 @@ if (isset($_POST["message"]) && isset($_SESSION['utilisateur']) && isset($_POST[
 
 
 ////////// Module de chat (affichage des messages) en AJAX //////////
-if (isset($_SESSION['utilisateur']) && isset($_POST["action"]) && isset($_POST["numsalon"]) && $_POST["action"] == "update")
+if (isset($_SESSION['user']) && isset($_POST["action"]) && isset($_POST["numsalon"]) && $_POST["action"] == "update")
 {
 	// Date à laquelle la requête a été effectuée (au format NOW)
 	$date_query = $_POST["datemess"];
@@ -38,10 +38,10 @@ if (isset($_SESSION['utilisateur']) && isset($_POST["action"]) && isset($_POST["
 		$longueur_det = count($det);
 		for ($i = 0; $i < $longueur_det; $i++)
 		{			
-			if ($det[$i]['id_user'] == $_SESSION['utilisateur']['id_user'])
+			if ($det[$i]['id_user'] == $_SESSION['user']['id_user'])
 			{
 				// Cas ou l'utilisateur récupéré de la BDD correspond à l'utilisateur connecté
-				$det[$i]['usercolor'] = $_SESSION['utilisateur']['user_color'];
+				$det[$i]['usercolor'] = $_SESSION['user']['user_color'];
 			}
 			else
 			{
@@ -59,7 +59,7 @@ if (isset($_SESSION['utilisateur']) && isset($_POST["action"]) && isset($_POST["
 ////////// Requête AJAX pour starter le setInterval //////////
 if (isset($_POST["action"]) && $_POST["action"] == "starter")
 {
-	if(isset($_SESSION['utilisateur']))
+	if(isset($_SESSION['user']))
 	{
 		echo 'true';
 	}
