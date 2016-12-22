@@ -154,12 +154,12 @@ $(document).ready( function() {
 		}				
 	});
 
-	////// SALONS //////
+	////// SALON & USERS SALON //////
 	listSalons.on('click', 'a', function(e) {
 		e.preventDefault();
 		var that = $(this);
 
-		
+		/************************************************** EN COURS SALONS.PHP / PB SUR LE F5 (chat par défaut dans HTML) ************************************************/
 		// Changement de salon
 		$.ajax({
 			url : "libs/salons.php",
@@ -205,7 +205,7 @@ $(document).ready( function() {
 		var dataString = that.serialize(); 
 
 		$.ajax({
-			url : that.attr("action"),
+			url : 'libs/ajax.php',
 			method : that.attr("method"),			
 			data : dataString,
 			complete : function (data) {

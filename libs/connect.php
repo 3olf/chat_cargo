@@ -25,25 +25,29 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp']) && isset($_POST['connexion']
   $mdp = htmlentities($mdp, ENT_QUOTES);
 
    /* CONTROLS */
-  $req = $pdo->query("SELECT id_user, pseudo FROM users WHERE pseudo='$pseudo' AND mdp=PASSWORD('$mdp')");
+  $req = $pdo->query("SELECT id_user FROM users WHERE pseudo='$pseudo' AND mdp=PASSWORD('$mdp')");
 
       // Vérification sur l'existence du pseudo demandé
   if ($req->rowCount() === 1) 
   {
 
-  	// Si l'utilisateur existe, on créer un tableau array 'utilisateur' dans la $_SESSION
-  	$_SESSION['user'] = array();
-
-  	$user_session = $req->fetch(PDO::FETCH_ASSOC);
-
-  	// On stock les éléments récupérés de la base de donnée dans $_SESSION['user']
-  	foreach ($user_session as $key => $value) 
-  	{
-  		  $_SESSION['user'][$key] = $value;
-  	}
+  	$user_id = $req->fetch(PDO::FETCH_ASSOC);
 
     // Mise à jour de l'activité utilisateur
-    $pdo->exec("UPDATE users SET last_seen=NOW(), statut ='en ligne' WHERE id_user = ".$_SESSION['user']['id_user']);
+    $pdo->exec("UPDATE users SET last_seen=NOW(), statut ='en ligne' WHERE id_user = ".$user_id['id_user']);
+
+
+    // Si l'utilisateur existe, on créer un tableau array 'utilisateur' dans la $_SESSION
+    $_SESSION['user'] = array();
+
+    $req = $pdo->query("SELECT u.id_user, u.pseudo, u.id_salon, u.last_seen, s.nom FROM users AS u JOIN salons AS s ON u.id_salon = s.id_salon WHERE id_user = ".$user_id['id_user']);
+
+    $user_session = $req->fetch(PDO::FETCH_ASSOC);
+    // On stock les éléments récupérés de la base de donnée dans $_SESSION['user']
+    foreach ($user_session as $key => $value) 
+    {
+        $_SESSION['user'][$key] = $value;
+    }
 
   	// Auquel on ajoute user_color (sert à mettre le pseudo de l'utilisateur en couleur)
   	$_SESSION['user']['user_color'] = randomColor();
@@ -106,7 +110,7 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp']) && isset($_POST['register'])
   if ($super_control === true)
   { 
     // Enregistrement utilisateur
-   $register_nickname = $pdo->exec("INSERT INTO users (pseudo, mdp) VALUES ('$pseudo', PASSWORD('$mdp'))");
+   $register_nickname = $pdo->exec("INSERT INTO users (pseudo, mdp, id_salon, last_seen) VALUES ('$pseudo', PASSWORD('$mdp'), '2', NOW())");
 
     //AJAX return
     echo 'true';

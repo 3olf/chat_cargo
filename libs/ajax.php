@@ -4,19 +4,19 @@ require_once("../inc/init.inc.php");
 
 
 ////////// Module d'enregistrement des messages en AJAX //////////
-if (isset($_POST["message"]) && isset($_SESSION['user']) && isset($_POST["numsalon"])) 
+if (isset($_POST["message"]) && isset($_SESSION['user'])) 
 {
 	// Mise à jour de l'activité utilisateur
 	$pdo->exec("UPDATE users SET last_seen=NOW(), statut='en ligne' WHERE id_user = ".$_SESSION['user']['id_user']);
 
+	$_SESSION['user']['last_seen'] = date("Y-m-d H:i:s");
+
 	// Conversion en htlmlentities pour éviter les caractères dégueulasses
 	$_POST["message"] = htmlentities($_POST["message"], ENT_QUOTES);
 
-	if(preg_match("#^[0-9]+$#", $_POST['numsalon']))
-	{
-		// Requête d'enregistrement en base de donnée
-		$register = $pdo->exec("INSERT INTO messages (id_user, id_salon, date_message, message) VALUES (".$_SESSION['user']['id_user'].", ".$_POST["numsalon"].",  NOW(), '$_POST[message]')");
-	}
+
+	// Requête d'enregistrement en base de donnée
+	$register = $pdo->exec("INSERT INTO messages (id_user, id_salon, date_message, message) VALUES (".$_SESSION['user']['id_user'].", ".$_SESSION['user']['id_salon'].",  NOW(), '$_POST[message]')");
 
 	exit();
 }

@@ -1,10 +1,18 @@
 <?php
-require_once("inc/init.inc.php"); 
+require_once("inc/init.inc.php");
 
-/////// TODO ///////
-// Déconnecter l'utilisateur après un laps de temps + header location
+// Pour conserver le salon en cours d'utilisation 
+if(isset($_SESSION['user']))
+{
+	$numsalon = $_SESSION['user']['id_salon'];
+	$nomsalon = $_SESSION['user']['nom'];
+}
+else
+{
+	$numsalon = 2;
+	$nomsalon = 'General';	
+}
 
-// Au F5 il faudrait garder l'id du salon en cours. Voir l'histo fait en exemple avec les pages AJAX
 
 ?>
 
@@ -45,18 +53,17 @@ require_once("inc/init.inc.php");
 			</fieldset>
 		</aside>
 		<section>
-			<fieldset id="section-chat" data-salon="2">
-				<legend>General</legend>				
-				<?php //echo "<pre>"; var_dump($_SESSION['user']); echo "</pre>"; // L'erreur php bloque l'execution des scripts en footer ?>
+			<fieldset id="section-chat" data-salon="<?= $numsalon ?>">
+				<legend><?= $nomsalon ?></legend>				
+				<?php echo "<pre>"; var_dump($_SESSION['user']); echo "</pre>"; // L'erreur php bloque l'execution des scripts en footer ?>
 				<div id="main-content">
 
 				</div>		
 			</fieldset>
 			<fieldset id="section-clavardeur">
 				<legend>Clavardeur</legend>
-				<form method="post" action="libs/ajax.php" id="form-message">
+				<form method="post" action="" id="form-message">
 					<textarea name="message" placeholder="Clavarder..." rows="4"></textarea>
-					<input type="hidden" name="numsalon" value="2" readonly="readonly">
 					<input type="submit" name="envoyermess" value="Envoyer" class="btn-perso" id="btn-chat">
 				</form>
 				<div class="clear"></div>				
