@@ -5,6 +5,7 @@ $(document).ready( function() {
 	var sectionChatLdg = $("#section-chat legend");
 	var sectionChat = $("#section-chat");
 	var chatContent = $('#main-content');
+	var listConnectes = $('#list-connectes');
 
 	// Chargement des salons
 	recupSalons();
@@ -140,9 +141,10 @@ $(document).ready( function() {
 		},
 		success : function(data) {
 			// fonction exécutée au succès de la requête
-				//console.log(data);
-			if(data == 'true')
+				console.log(data);
+			if(data)
 			{
+				recupUsers(data);
 				recupChat();
 				var loopChat = setInterval(recupChat, 10000);
 				var loopSalons = setInterval(recupSalons, 20000);
@@ -159,7 +161,6 @@ $(document).ready( function() {
 		e.preventDefault();
 		var that = $(this);
 
-		/************************************************** EN COURS SALONS.PHP / PB SUR LE F5 (chat par défaut dans HTML) ************************************************/
 		// Changement de salon
 		$.ajax({
 			url : "libs/salons.php",
@@ -176,10 +177,12 @@ $(document).ready( function() {
 				// Ajout des attributs pour cibler chaque salon
 				sectionChat.attr('data-salon', parsedData.num);
 				sectionChatLdg.text(parsedData.nom);
-				$("#form-message [type=hidden]").val(parsedData.num);
+				listConnectes.find('h4').text("Connectés sur "+parsedData.nom);
+
 
 				// Suppression des anciens messages du chat + affichage des nouveaux
 				chatContent.html("");
+				recupUsers(parsedData.num);
 				setTimeout(recupChat,200);
 			},
 			error : function(jqXHR, textStatus, errorThrow){
@@ -314,6 +317,44 @@ function recupSalons() {
 			}
 
 			listSalons.html(content);
+		},
+		error : function(jqXHR, textStatus, errorThrow){
+			// fonction exécutée à l'échec de la requête
+			console.log(jqXHR, textStatus, errorThrow);
+		},
+		complete : function (data) {
+			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
+				//console.log(data);
+		},									
+	});	
+}
+
+////// DISPLAY USERS //////
+function recupUsers(salon) {
+	var listConnectes = $('#list-connectes ul');
+	var idSalon = salon;
+
+	$.ajax({
+		url : 'libs/salons.php',
+		method : 'POST',
+		dataType : 'text',		
+		data : {"action" : "listConnectes",
+				"salon" : idSalon},
+		success : function(data) {
+			// fonction exécutée au succès de la requête
+			console.log(JSON.parse(data));
+
+			// Récupération des data en JSON converti en objet javascript	
+			var parsedData = JSON.parse(data);
+			var content ="";
+
+			for(var i = 0; i < parsedData.length; i++)
+			{
+				content += "<li>"+parsedData[i]+"</li>";
+			}
+
+
+			listConnectes.html(content);
 		},
 		error : function(jqXHR, textStatus, errorThrow){
 			// fonction exécutée à l'échec de la requête

@@ -16,6 +16,7 @@ if (isset($_POST["salon"]) && isset($_POST["nom"]))
 {
 	$numsalon = substr($_POST["salon"], -1);
 	$nomsalon = $_POST["nom"];
+
 	$json = array('num' => $numsalon, 'nom' => $nomsalon);
 	echo json_encode($json);
 
@@ -33,6 +34,23 @@ if (isset($_POST["salon"]) && isset($_POST["nom"]))
 	$_SESSION['user']['nom'] = $nomsalon;
 
 	// Suppression utilisateur de l'ancien salon
+	exit();
+}
+
+////////// Affichage des connectés //////////
+if (isset($_POST["action"]) && $_POST["action"] == "listConnectes") 
+{
+	$_POST["salon"] = (int)$_POST["salon"];
+
+	$req = $pdo->query("SELECT u.pseudo FROM users AS u JOIN salons AS s ON u.id_salon = s.id_salon WHERE u.id_salon = ".$_POST["salon"]);
+	$users_connected = $req->fetchAll(PDO::FETCH_ASSOC);
+
+	$tab = array();
+	foreach ($users_connected as $user_connected) {
+		$tab[] .= $user_connected['pseudo'];
+	}
+
+	echo json_encode($tab);
 	exit();
 }
 

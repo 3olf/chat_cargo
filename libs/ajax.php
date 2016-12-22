@@ -61,11 +61,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "starter")
 {
 	if(isset($_SESSION['user']))
 	{
-		echo 'true';
-	}
-	else
-	{
-		echo 'false';
+		echo $_SESSION['user']['id_salon'];
 	}
 	exit();
 }

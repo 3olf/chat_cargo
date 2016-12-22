@@ -1,6 +1,8 @@
 <?php
 require_once("inc/init.inc.php");
 
+/* TODO : closure pour faire un setInterval qui récupère les membres. Ajouter un timeout de 10 min */
+
 // Pour conserver le salon en cours d'utilisation 
 if(isset($_SESSION['user']))
 {
@@ -50,12 +52,17 @@ else
 					<ul>
 					</ul>
 				</div>
+				<div id="list-connectes">
+					<h4>Connectés sur <?= $nomsalon ?></h4>
+					<ul>
+					</ul>
+				</div>				
 			</fieldset>
 		</aside>
 		<section>
 			<fieldset id="section-chat" data-salon="<?= $numsalon ?>">
 				<legend><?= $nomsalon ?></legend>				
-				<?php echo "<pre>"; var_dump($_SESSION['user']); echo "</pre>"; // L'erreur php bloque l'execution des scripts en footer ?>
+				<?php // echo "<pre>"; var_dump($_SESSION['user']); echo "</pre>"; // L'erreur php bloque l'execution des scripts en footer ?>
 				<div id="main-content">
 
 				</div>		
