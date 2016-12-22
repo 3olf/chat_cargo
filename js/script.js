@@ -7,42 +7,19 @@ $(document).ready( function() {
 	var chatContent = $('#main-content');
 	var listConnectes = $('#list-connectes');
 
+	// Message d'erreur chat utilisateur non connecté
+	var warning = $("<p class='msg-error'></p>");	
 
-	////// Refresh chat on load/reload //////
-	$.ajax({
-		url : 'libs/ajax.php',
-		method : 'POST',		
-		data : {"action" : "starter"},	// Paramètre de contrôle pour le service ajax.php
-		complete : function (data) {
-			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
-				//console.log(data);
-		},
-		success : function(data) {
-			// fonction exécutée au succès de la requête
-				//console.log(data);
-			if(data)
-			{
-				recupSalons();
-				recupUsers(data);
-				recupChat();
-				var loopChat = setInterval(recupChat, 10000);
-				var loopSalons = setInterval(recupSalons, 60000);
-			}
-			else
-			{
-				recupSalons();
-				recupUsers(2);
-				recupChat();
-			}
-		},
-		error : function(jqXHR, textStatus, errorThrow){
-			// fonction exécutée à l'échec de la requête
-			console.log(jqXHR, textStatus, errorThrow);
-		}				
-	});
+	////// ON LOAD / AUTO REFRESH //////
 
-	// Chargement des salons
-	//recupSalons();
+	recupSalons();
+	recupUsers();
+	recupChat();
+
+	var loopChat = setInterval(recupChat, 10000);
+	var loopSalons = setInterval(recupSalons, 600000);			
+	var loopUsers = setInterval(recupUsers, 120000);
+
 
 	////// REGISTER //////
 	espaceRegister.on('click', function() { // one permet d'activer le bouton une seule fois. 
@@ -187,7 +164,7 @@ $(document).ready( function() {
 
 				// Suppression des anciens messages du chat + affichage des nouveaux
 				chatContent.html("");
-				recupUsers(parsedData.num);
+				recupUsers();
 				setTimeout(recupChat,200);
 			},
 			error : function(jqXHR, textStatus, errorThrow){
@@ -209,6 +186,10 @@ $(document).ready( function() {
 		e.preventDefault();
 		var that = $(this);
 
+
+
+		
+
 		// Données à envoyer
 		var dataString = that.serialize(); 
 
@@ -216,13 +197,14 @@ $(document).ready( function() {
 			url : 'libs/ajax.php',
 			method : that.attr("method"),			
 			data : dataString,
-			complete : function (data) {
-				// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
-					//console.log(data);
-			},
 			success : function(data) {
 				// fonction exécutée au succès de la requête
 					//console.log(data);
+
+				// Envoi du message d'erreur si l'utilisateur est non connecté				
+				warning.empty();
+				warning.html(data);
+				warning.insertBefore(chatContent);
 
 				// Suppression du message du textarea après envoi	
 				$("#form-message textarea").val("");
@@ -234,7 +216,11 @@ $(document).ready( function() {
 			error : function(jqXHR, textStatus, errorThrow){
 				// fonction exécutée à l'échec de la requête
 				console.log(jqXHR, textStatus, errorThrow);
-			}			
+			},
+			complete : function (data) {
+				// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
+					//console.log(data);	
+			}						
 		});		
 	});
 
@@ -301,16 +287,15 @@ function recupChat() {
 
 
 ////// DISPLAY USERS //////
-function recupUsers(salon) {
+function recupUsers() {
 	var listConnectes = $('#list-connectes ul');
-	var idSalon = salon;
 
 	$.ajax({
 		url : 'libs/salons.php',
 		method : 'POST',
 		dataType : 'text',		
 		data : {"action" : "listConnectes",
-				"salon" : idSalon},
+				"salon" : $("#section-chat").attr("data-salon")},
 		success : function(data) {
 			// fonction exécutée au succès de la requête
 			console.log(JSON.parse(data));

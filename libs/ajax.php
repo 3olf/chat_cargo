@@ -20,7 +20,11 @@ if (isset($_POST["message"]) && isset($_SESSION['user']))
 
 	exit();
 }
-
+elseif(isset($_POST["message"]) && !userConnected())
+{
+	echo 'Vous devez vous connecter pour envoyer un message';
+	exit();
+}
 
 ////////// Module de chat (affichage des messages) en AJAX //////////
 if (isset($_POST["action"]) && isset($_POST["numsalon"]) && $_POST["action"] == "update")
@@ -56,16 +60,6 @@ if (isset($_POST["action"]) && isset($_POST["numsalon"]) && $_POST["action"] == 
 
 	// Renvoi des donnés sous forme JSON
 	echo json_encode($det);
-	exit();
-}
-
-////////// Requête AJAX pour starter le setInterval //////////
-if (isset($_POST["action"]) && $_POST["action"] == "starter")
-{
-	if(isset($_SESSION['user']))
-	{
-		echo $_SESSION['user']['id_salon'];
-	}
 	exit();
 }
 
