@@ -1,7 +1,10 @@
 <?php
 require_once("inc/init.inc.php");
 
-/* TODO : closure pour faire un setInterval qui récupère les membres. Ajouter un timeout de 10 min */
+/* 
+TODO : closure pour faire un setInterval qui récupère les membres. 
+Ajouter un timeout de 10 min. Message d'alerte quand on tente de poster non connecté 
+*/
 
 // Pour conserver le salon en cours d'utilisation 
 if(isset($_SESSION['user']))

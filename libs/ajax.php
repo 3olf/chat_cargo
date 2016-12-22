@@ -23,7 +23,7 @@ if (isset($_POST["message"]) && isset($_SESSION['user']))
 
 
 ////////// Module de chat (affichage des messages) en AJAX //////////
-if (isset($_SESSION['user']) && isset($_POST["action"]) && isset($_POST["numsalon"]) && $_POST["action"] == "update")
+if (isset($_POST["action"]) && isset($_POST["numsalon"]) && $_POST["action"] == "update")
 {
 	// Date à laquelle la requête a été effectuée (au format NOW)
 	$date_query = $_POST["datemess"];
@@ -35,19 +35,22 @@ if (isset($_SESSION['user']) && isset($_POST["action"]) && isset($_POST["numsalo
 		$det = $req->fetchall(PDO::FETCH_ASSOC);
 
 		// Boucle pour ajouter la couleur utilisateur au tableau multi dimensionnel récupéré du fetch de ma requête
-		$longueur_det = count($det);
-		for ($i = 0; $i < $longueur_det; $i++)
-		{			
-			if ($det[$i]['id_user'] == $_SESSION['user']['id_user'])
-			{
-				// Cas ou l'utilisateur récupéré de la BDD correspond à l'utilisateur connecté
-				$det[$i]['usercolor'] = $_SESSION['user']['user_color'];
+		if(isset($_SESSION['user']))
+		{
+			$longueur_det = count($det);
+			for ($i = 0; $i < $longueur_det; $i++)
+			{			
+				if ($det[$i]['id_user'] == $_SESSION['user']['id_user'])
+				{
+					// Cas ou l'utilisateur récupéré de la BDD correspond à l'utilisateur connecté
+					$det[$i]['usercolor'] = $_SESSION['user']['user_color'];
+				}
+				else
+				{
+					// Autres utilisateurs
+					$det[$i]['usercolor'] = "";
+				}		
 			}
-			else
-			{
-				// Autres utilisateurs
-				$det[$i]['usercolor'] = "";
-			}		
 		}
 	}
 

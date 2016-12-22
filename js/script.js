@@ -7,8 +7,42 @@ $(document).ready( function() {
 	var chatContent = $('#main-content');
 	var listConnectes = $('#list-connectes');
 
+
+	////// Refresh chat on load/reload //////
+	$.ajax({
+		url : 'libs/ajax.php',
+		method : 'POST',		
+		data : {"action" : "starter"},	// Paramètre de contrôle pour le service ajax.php
+		complete : function (data) {
+			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
+				//console.log(data);
+		},
+		success : function(data) {
+			// fonction exécutée au succès de la requête
+				//console.log(data);
+			if(data)
+			{
+				recupSalons();
+				recupUsers(data);
+				recupChat();
+				var loopChat = setInterval(recupChat, 10000);
+				var loopSalons = setInterval(recupSalons, 60000);
+			}
+			else
+			{
+				recupSalons();
+				recupUsers(2);
+				recupChat();
+			}
+		},
+		error : function(jqXHR, textStatus, errorThrow){
+			// fonction exécutée à l'échec de la requête
+			console.log(jqXHR, textStatus, errorThrow);
+		}				
+	});
+
 	// Chargement des salons
-	recupSalons();
+	//recupSalons();
 
 	////// REGISTER //////
 	espaceRegister.on('click', function() { // one permet d'activer le bouton une seule fois. 
@@ -125,35 +159,6 @@ $(document).ready( function() {
 				});					
 			}
 		});		
-	});
-
-
-
-
-	////// Refresh chat on load/reload w/ user is connected //////
-	$.ajax({
-		url : 'libs/ajax.php',
-		method : 'POST',		
-		data : {"action" : "starter"},	// Paramètre de contrôle pour le service ajax.php
-		complete : function (data) {
-			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
-				//console.log(data);
-		},
-		success : function(data) {
-			// fonction exécutée au succès de la requête
-				console.log(data);
-			if(data)
-			{
-				recupUsers(data);
-				recupChat();
-				var loopChat = setInterval(recupChat, 10000);
-				var loopSalons = setInterval(recupSalons, 20000);
-			}
-		},
-		error : function(jqXHR, textStatus, errorThrow){
-			// fonction exécutée à l'échec de la requête
-			console.log(jqXHR, textStatus, errorThrow);
-		}				
 	});
 
 	////// SALON & USERS SALON //////
@@ -294,40 +299,6 @@ function recupChat() {
 	});
 }
 
-////// DISPLAY SALONS //////
-function recupSalons() {
-	var listSalons = $('#list-salons ul');
-
-	$.ajax({
-		url : 'libs/salons.php',
-		method : 'POST',
-		dataType : 'text',		
-		data : {"action" : "listSalons"},
-		success : function(data) {
-			// fonction exécutée au succès de la requête
-			//console.log(JSON.parse(data));
-
-			// Récupération des data en JSON converti en objet javascript	
-			var parsedData = JSON.parse(data);
-			var content ="";
-
-			for (var i = 0; i < parsedData.length; i++) 
-			{
-				content += "<li><a href='"+parsedData[i].nom.toLowerCase()+parsedData[i].id_salon+"'>"+parsedData[i].nom+"</a></li>";
-			}
-
-			listSalons.html(content);
-		},
-		error : function(jqXHR, textStatus, errorThrow){
-			// fonction exécutée à l'échec de la requête
-			console.log(jqXHR, textStatus, errorThrow);
-		},
-		complete : function (data) {
-			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
-				//console.log(data);
-		},									
-	});	
-}
 
 ////// DISPLAY USERS //////
 function recupUsers(salon) {
@@ -366,6 +337,42 @@ function recupUsers(salon) {
 		},									
 	});	
 }
+
+////// DISPLAY SALONS //////
+function recupSalons() {
+	var listSalons = $('#list-salons ul');
+
+	$.ajax({
+		url : 'libs/salons.php',
+		method : 'POST',
+		dataType : 'text',		
+		data : {"action" : "listSalons"},
+		success : function(data) {
+			// fonction exécutée au succès de la requête
+			//console.log(JSON.parse(data));
+
+			// Récupération des data en JSON converti en objet javascript	
+			var parsedData = JSON.parse(data);
+			var content ="";
+
+			for (var i = 0; i < parsedData.length; i++) 
+			{
+				content += "<li><a href='"+parsedData[i].nom.toLowerCase()+parsedData[i].id_salon+"'>"+parsedData[i].nom+"</a></li>";
+			}
+
+			listSalons.html(content);
+		},
+		error : function(jqXHR, textStatus, errorThrow){
+			// fonction exécutée à l'échec de la requête
+			console.log(jqXHR, textStatus, errorThrow);
+		},
+		complete : function (data) {
+			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
+				//console.log(data);
+		},									
+	});	
+}
+
 
 // PASSWORD CHECKER
 function checkPassword(mdp) 
