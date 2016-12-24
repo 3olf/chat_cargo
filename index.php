@@ -14,8 +14,8 @@ if(isset($_SESSION['user']))
 }
 else
 {
-	$numsalon = 2;
-	$nomsalon = 'General';	
+	$numsalon = 3;
+	$nomsalon = 'Géneral';	
 }
 
 

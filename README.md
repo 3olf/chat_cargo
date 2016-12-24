@@ -1,20 +1,26 @@
 # Chat 'Cargo' AJAX  
 
 Welcome to my chat 'Cargo' !  
+ 
 
-Here you can find some code to host your own chat :)  
+## 2016-24-12 update  
+* added a display of actives users in the chatroom (last activity <= 10 min)  
+* bug fix on register button closing the register form before you could send the form  
 
-This projet intend to develop my programmation skills. Feel free to use it if you want.  
+## Current version  
+* Chat functionnality (send/get messages)  
+* Account registering  
+* Permanent chatrooms  
+* Chatroom active users list  
 
-## Current version (v 0.7)  
-* Account registering (nickname + password) + login/logoff  
-* One chatroom restricted to connected users  
+## Roadmap    
 
-## Roadmap  
+### Fixes  
+* Default id chatroom on registration  
+* auto login on registration not working  
 
-### Major features  
-*Possibility to create multiple chatrooms (v0.8)  
-*Display list of connected users (v0.8)  
+### features  
+*Possibility for users to create temporary chatrooms    
 *Friend list  
 
 ### Minor features  

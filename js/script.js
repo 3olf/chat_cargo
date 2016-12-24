@@ -22,7 +22,7 @@ $(document).ready( function() {
 
 
 	////// REGISTER //////
-	espaceRegister.on('click', function() { // one permet d'activer le bouton une seule fois. 
+	espaceRegister.on('click', '.btn-inverse-perso', function() { // one permet d'activer le bouton une seule fois. 
 
 		// Contenu du formulaire d'engistrement (possibilité afficher en HTML et gérer display none)
 		var form = "<div id='register-box'><h4>Inscription</h4><hr><form method='post' action='libs/connect.php' id='form-inscription'><label for='pseudo-register'>Pseudonyme</label><input type='text' name='pseudo' placeholder='Pseudo' id='pseudo-register'><label for='mdp-register'>Mot de passe</label><input type='password' name='mdp' placeholder='Mot de passe' id='mdp-register'><input type='submit' name='register' value='Envoyer' class='btn-perso btn-inscription'></form></div>";
@@ -82,7 +82,7 @@ $(document).ready( function() {
 
 				// Mise en forme messages d'erreur
 				inputPseudo.css("border-color", "red");
-				inputPseudo.after("<p class='msg-error pseudo-error'>Entre 5 et 14 caractères alphanumériques, tiret, underscore (_)</p>");
+				inputPseudo.after("<p class='msg-error pseudo-error'>Entre 4 et 14 caractères alphanumériques, tiret, underscore (_)</p>");
 				inputPseudo.focus();
 				submitChecker = false;			
 			}
@@ -132,7 +132,7 @@ $(document).ready( function() {
 					complete : function (data) {
 						// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
 							//console.log(data);
-					},									
+					}									
 				});					
 			}
 		});		
@@ -185,10 +185,6 @@ $(document).ready( function() {
 	formMessage.on("submit", function(e) {
 		e.preventDefault();
 		var that = $(this);
-
-
-
-		
 
 		// Données à envoyer
 		var dataString = that.serialize(); 
@@ -354,7 +350,7 @@ function recupSalons() {
 		complete : function (data) {
 			// fonction exécutée lorsque la requête est terminée. Renvoie un objet readyState + response + status
 				//console.log(data);
-		},									
+		}									
 	});	
 }
 

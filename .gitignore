@@ -1,2 +1,4 @@
 /not_github/
 inc/init.inc.php
+*.sublime-project
+*.sublime-workspace

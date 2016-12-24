@@ -64,7 +64,6 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp']) && isset($_POST['connexion']
 }	
 
 /* --------- ENREGISTREMENT --------- */
-// AJAX par défaut (fonctionne si JS est désactivé en PHP)
 if (isset($_POST['pseudo']) && isset($_POST['mdp']) && isset($_POST['register']))
 {
   /* CONTROLS */
@@ -110,7 +109,7 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp']) && isset($_POST['register'])
   if ($super_control === true)
   { 
     // Enregistrement utilisateur
-   $register_nickname = $pdo->exec("INSERT INTO users (pseudo, mdp, id_salon, last_seen) VALUES ('$pseudo', PASSWORD('$mdp'), '2', NOW())");
+   $register_nickname = $pdo->exec("INSERT INTO users (pseudo, mdp, id_salon, last_seen) VALUES ('$pseudo', PASSWORD('$mdp'), '3', NOW())");
 
     //AJAX return
     echo 'true';
